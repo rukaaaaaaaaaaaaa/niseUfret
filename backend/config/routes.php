@@ -79,18 +79,17 @@ return function (RouteBuilder $routes): void {
     });
 
     /*
-     * If you need a different set of middleware or none at all,
-     * open new scope and define routes there.
-     *
-     * ```
-     * $routes->scope('/api', function (RouteBuilder $builder): void {
-     *     // No $builder->applyMiddleware() here.
-     *
-     *     // Parse specified extensions from URLs
-     *     // $builder->setExtensions(['json', 'xml']);
-     *
-     *     // Connect API actions here.
-     * });
-     * ```
+     * API routes
      */
+    $routes->scope('/api', function (RouteBuilder $builder): void {
+        $builder->setExtensions(['json']);
+
+        // Singer routes
+        $builder->connect('/singer', ['controller' => 'Singer', 'action' => 'index'], ['_method' => 'GET']);
+        $builder->connect('/singer', ['controller' => 'Singer', 'action' => 'store'], ['_method' => 'POST']);
+
+        // Songs routes
+        $builder->connect('/songs', ['controller' => 'Songs', 'action' => 'index'], ['_method' => 'GET']);
+        $builder->connect('/songs', ['controller' => 'Songs', 'action' => 'store'], ['_method' => 'POST']);
+    });
 };

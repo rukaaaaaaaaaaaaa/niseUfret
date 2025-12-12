@@ -29,3 +29,14 @@ services:
       MYSQL_PASSWORD: app_pass
     ports:
       - "3306:3306"
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    depends_on:
+      - db

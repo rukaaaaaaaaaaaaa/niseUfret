@@ -31,4 +31,3 @@ docker compose logs -f
 # 特定のコンテナに入る
 docker compose exec php bash
 docker compose exec frontend sh
-s
