@@ -49,4 +49,21 @@ class AppController extends Controller
          */
         //$this->loadComponent('FormProtection');
     }
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+
+        // CORS設定（React SPAからのアクセスを許可）
+        $this->response = $this->response
+            ->withHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+            ->withHeader('Access-Control-Allow-Credentials', 'true');
+
+        // OPTIONSリクエスト（プリフライト）への対応
+        if ($this->request->is('options')) {
+            return $this->response;
+        }
+    }
 }
