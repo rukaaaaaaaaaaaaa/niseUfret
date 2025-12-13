@@ -83,26 +83,6 @@ class SingerController extends AppController
     }
 
     /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $singer = $this->Singer->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $singer = $this->Singer->patchEntity($singer, $this->request->getData());
-            if ($this->Singer->save($singer)) {
-                $this->Flash->success(__('The singer has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The singer could not be saved. Please, try again.'));
-        }
-        $this->set(compact('singer'));
-    }
-
-    /**
      * Edit method
      *
      * @param string|null $id Singer id.

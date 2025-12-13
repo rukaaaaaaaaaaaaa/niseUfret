@@ -91,5 +91,6 @@ return function (RouteBuilder $routes): void {
         // Songs routes
         $builder->connect('/songs', ['controller' => 'Songs', 'action' => 'index'], ['_method' => 'GET']);
         $builder->connect('/songs', ['controller' => 'Songs', 'action' => 'store'], ['_method' => 'POST']);
+        $builder->connect('/songs/:id', ['controller' => 'Songs', 'action' => 'view'], ['_method' => 'GET', 'pass' => ['id']]);
     });
 };

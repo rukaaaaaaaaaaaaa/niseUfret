@@ -19,7 +19,7 @@ class SongsController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Http\Response|null|void Renders view
+     * @return \Cake\Http\Response JSON response
      */
     public function index()
     {
@@ -27,11 +27,22 @@ class SongsController extends AppController
             ->contain(['Singer'])
             ->all();
 
-        $this->set([
-            'songs' => $songs,
-            '_serialize' => ['songs']
-        ]);
-        $this->viewBuilder()->setOption('serialize', ['songs']);
+        $songsArray = [];
+        foreach ($songs as $song) {
+            $songsArray[] = [
+                'id' => $song->id,
+                'title' => $song->title,
+                'singer_id' => $song->singer_id,
+                'singer_name' => $song->singer->name ?? null,
+                'album' => $song->album,
+                'created' => $song->created,
+                'modified' => $song->modified
+            ];
+        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode($songsArray));
     }
 
     /**
@@ -69,34 +80,30 @@ class SongsController extends AppController
      * View method
      *
      * @param string|null $id Song id.
-     * @return \Cake\Http\Response|null|void Renders view
+     * @return \Cake\Http\Response JSON response
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $song = $this->Songs->get($id, contain: ['Singers']);
-        $this->set(compact('song'));
-    }
+        $song = $this->Songs->get($id, contain: ['Singer']);
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $song = $this->Songs->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $song = $this->Songs->patchEntity($song, $this->request->getData());
-            if ($this->Songs->save($song)) {
-                $this->Flash->success(__('The song has been saved.'));
+        $songData = [
+            'id' => $song->id,
+            'title' => $song->title,
+            'singer_id' => $song->singer_id,
+            'singer_name' => $song->singer->name ?? null,
+            'code' => $song->code,
+            'stroke' => $song->stroke,
+            'lyric' => $song->lyric,
+            'bpm' => $song->bpm,
+            'album' => $song->album,
+            'created' => $song->created,
+            'modified' => $song->modified
+        ];
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The song could not be saved. Please, try again.'));
-        }
-        $singers = $this->Songs->Singers->find('list', limit: 200)->all();
-        $this->set(compact('song', 'singers'));
+        return $this->response
+            ->withType('application/json')
+            ->withStringBody(json_encode($songData));
     }
 
     /**
